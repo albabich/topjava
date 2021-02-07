@@ -16,16 +16,11 @@
         <th>Calories</th>
     </tr>
     <c:forEach var="meal" items="${meals}">
-        <c:set var="textcolor" value="color:green"/>
-        <c:if test="${meal.excess}">
-            <c:set var="textcolor" value="color:red"/>
-        </c:if>
-        <tr style="${textcolor}">
-            <td><fmt:parseDate value="${ meal.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime"
-                               type="both"/>
-                <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }"/></td>
-            <td><c:out value="${meal.description}"></c:out></td>
-            <td><c:out value="${meal.calories}"></c:out></td>
+        <tr style="${meal.excess ? "color:red" : "color:green"}">
+            <td><fmt:parseDate value="${ meal.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both"/>
+                <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${ parsedDateTime }"/></td>
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
         </tr>
     </c:forEach>
 </table>
