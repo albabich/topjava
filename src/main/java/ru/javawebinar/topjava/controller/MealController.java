@@ -16,8 +16,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealController extends HttpServlet {
+    private static final Logger log = getLogger(MealController.class);
     private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/meal.jsp";
     private static String LIST_MEAL = "/listMeal.jsp";
@@ -50,7 +53,7 @@ public class MealController extends HttpServlet {
         } else {
             forward = INSERT_OR_EDIT;
         }
-
+        log.debug("forward to" + forward + " from doGet");
         RequestDispatcher view = request.getRequestDispatcher(forward);
         view.forward(request, response);
     }
@@ -72,6 +75,7 @@ public class MealController extends HttpServlet {
         List<MealTo> mealToList = MealsUtil.filteredByStreams((List<Meal>) dao.getAllMeals(), LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DATE);
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEAL);
         request.setAttribute("meals", mealToList);
+        log.debug("forward to " + LIST_MEAL + " from doPost" );
         view.forward(request, response);
     }
 }
