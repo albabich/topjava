@@ -23,7 +23,7 @@ public class MealController extends HttpServlet {
     private static final Logger log = getLogger(MealController.class);
     private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/meal.jsp";
-    private static String LIST_MEAL = "/listMeal.jsp";
+    private static String LIST_MEAL = "/meals.jsp";
     private MealDao dao;
 
     public MealController() {
