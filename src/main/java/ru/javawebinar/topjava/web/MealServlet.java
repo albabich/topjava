@@ -38,7 +38,7 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null || action.isEmpty()) {
             forward = LIST_MEAL;
-            List<MealTo> mealToList = MealsUtil.filteredByStreams((List<Meal>) dao.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DATE);
+            List<MealTo> mealToList = MealsUtil.filteredByStreams( dao.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DATE);
             request.setAttribute("meals", mealToList);
         } else {
             if (action.equalsIgnoreCase("delete")) {
