@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDaoInMemoryImpl implements MealDao {
-    private static AtomicInteger mealCount = new AtomicInteger(0);
+    private  AtomicInteger mealCount = new AtomicInteger(0);
 
     private List<Meal> mealList;
 
@@ -29,37 +29,34 @@ public class MealDaoInMemoryImpl implements MealDao {
     }
 
     @Override
-    public AtomicInteger getMealCount() {
-        return mealCount;
-    }
-
-    @Override
-    public Object getAllMeals() {
+    public List<Meal> getAll() {
         return mealList;
     }
 
     @Override
-    public Meal getMealById(int id) {
+    public Meal getById(int id) {
         return mealList.stream().filter(meal -> meal.getId() == id).findAny().orElse(null);
     }
 
     @Override
-    public void addMeal(Meal meal) {
+    public Meal add(Meal meal) {
         meal.setId(mealCount.incrementAndGet());
         mealList.add(meal);
+        return meal;
     }
 
     @Override
-    public void updateMeal(Meal meal) {
+    public Meal update(Meal meal) {
         int id = meal.getId();
-        Meal mealToBeUpdated = getMealById(id);
+        Meal mealToBeUpdated = getById(id);
         mealToBeUpdated.setDateTime(meal.getDateTime());
         mealToBeUpdated.setDescription(meal.getDescription());
         mealToBeUpdated.setCalories(meal.getCalories());
+        return mealToBeUpdated;
     }
 
     @Override
-    public void deleteMeal(int id) {
+    public void delete(int id) {
         mealList.removeIf(m -> m.getId() == id);
     }
 }
