@@ -65,7 +65,7 @@ public class MealServlet extends HttpServlet {
             default:
                 log.info("getAll");
                 request.setAttribute("meals",
-                        repository.getAll(SecurityUtil.authUserId(), LocalDate.MIN,LocalDate.MAX));
+                        MealsUtil.getTos(repository.getAll(SecurityUtil.authUserId(), LocalDate.MIN,LocalDate.MAX), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
