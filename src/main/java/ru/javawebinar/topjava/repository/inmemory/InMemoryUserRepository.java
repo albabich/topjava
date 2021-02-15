@@ -23,10 +23,10 @@ public class InMemoryUserRepository implements UserRepository {
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    {
-        User user = new User(null,"Николай", "nik1@inbox.ru", "pass1", Role.ADMIN);
-        save(user);
-    }
+//    {
+//        User user = new User(null,"Николай", "nik1@inbox.ru", "pass1", Role.ADMIN);
+//        save(user);
+//    }
 
     @Override
     public boolean delete(int id) {
