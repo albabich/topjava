@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 public class InMemoryMealRepository implements MealRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryMealRepository.class);
     private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
-    private Map<Integer, Meal> meals;
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -29,7 +27,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(int userId, Meal meal) {
-        meals = repository.get(userId) == null ? new HashMap<>() : repository.get(userId);
+        Map<Integer, Meal> meals = repository.get(userId) == null ? new HashMap<>() : repository.get(userId);
         if (meal.isNew()) {
             log.info("create userId={}, meal={}", userId, meal);
             meal.setId(counter.incrementAndGet());
@@ -48,7 +46,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int userId, int mealId) {
-        meals = repository.get(userId);
+        Map<Integer, Meal> meals = repository.get(userId);
         if (get(userId, mealId) == null) {
             return false;
         } else {
@@ -61,7 +59,11 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal get(int userId, int mealId) {
-        meals = repository.get(userId);
+        Map<Integer, Meal> meals = repository.get(userId);
+        if (meals == null) {
+            log.info("This user don't have any meal");
+            return null;
+        }
         Meal meal = meals.get(mealId);
         if (meal == null) {
             log.info("This meal don't exist");
@@ -89,7 +91,11 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     public List<Meal> filterByPredicate(int userId, Predicate<Meal> filter) {
-        return repository.get(userId).values().stream()
+        Map<Integer, Meal> meals = repository.get(userId);
+        if (meals == null) {
+            return Collections.emptyList();
+        }
+        return meals.values().stream()
                 .filter(filter)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());

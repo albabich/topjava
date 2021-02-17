@@ -31,7 +31,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        super.destroy();
         appCtx.close();
     }
 
@@ -50,7 +49,7 @@ public class MealServlet extends HttpServlet {
         if (meal.isNew()) {
             controller.create(meal);
         } else {
-            controller.update(meal);
+            controller.update(meal,Integer.parseInt(id));
         }
         response.sendRedirect("meals");
     }
@@ -78,10 +77,10 @@ public class MealServlet extends HttpServlet {
             case "filter":
                 log.info("filter");
                 request.setAttribute("meals",
-                        controller.getAll(request.getParameter("startDate") == null || request.getParameter("startDate").isEmpty() ? LocalDate.MIN : LocalDate.parse(request.getParameter("startDate")),
-                                request.getParameter("startTime") == null || request.getParameter("startTime").isEmpty() ? LocalTime.MIN : LocalTime.parse(request.getParameter("startTime")),
-                                request.getParameter("endDate") == null || request.getParameter("endDate").isEmpty() ? LocalDate.MAX : LocalDate.parse(request.getParameter("endDate")),
-                                request.getParameter("endTime") == null || request.getParameter("endTime").isEmpty() ? LocalTime.MAX : LocalTime.parse(request.getParameter("endTime"))));
+                        controller.getAllFiltered(request.getParameter("startDate") == null || request.getParameter("startDate").isEmpty() ? null : LocalDate.parse(request.getParameter("startDate")),
+                                request.getParameter("startTime") == null || request.getParameter("startTime").isEmpty() ? null : LocalTime.parse(request.getParameter("startTime")),
+                                request.getParameter("endDate") == null || request.getParameter("endDate").isEmpty() ? null : LocalDate.parse(request.getParameter("endDate")),
+                                request.getParameter("endTime") == null || request.getParameter("endTime").isEmpty() ? null : LocalTime.parse(request.getParameter("endTime"))));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             default:
@@ -96,5 +95,4 @@ public class MealServlet extends HttpServlet {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
     }
-
 }
