@@ -20,6 +20,27 @@
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr/>
+    <form  action="meals">
+        <input type="hidden" name="action" value="filter">
+        <table>
+            <tr>
+                <td>От даты(включая)</td>
+                <td>До даты(включая)</td>
+                <td>От времени (включая)</td>
+                <td>До времени (включая)</td>
+            </tr>
+            <tr>
+                    <td><input type="date" name="startDate" value="${param.startDate}"></td>
+                    <td><input type="date" name="endDate" value="${param.endDate}"></td>
+                    <td><input type="time" name="startTime" value="${param.startTime}"></td>
+                    <td><input type="time" name="endTime" value="${param.endTime}"></td>
+            </tr>
+        </table>
+            <button onclick="window.history.back()" type="button">Отменить</button>
+            <button type="submit">Отфильтровать</button>
+
+    </form>
+
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
