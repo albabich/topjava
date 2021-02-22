@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -48,7 +47,7 @@ public class JdbcMealRepository implements MealRepository {
             Number newKey = insertMeal.executeAndReturnKey(map);
             meal.setId(newKey.intValue());
         } else if (namedParameterJdbcTemplate.update(
-                "UPDATE meals SET  user_id=:user_id, datetime=:datetime, description=:description, calories=:calories WHERE id=:id", map) == 0) {
+                "UPDATE meals SET  datetime=:datetime, description=:description, calories=:calories WHERE id=:id AND user_id=:user_id", map) == 0) {
             return null;
         }
         return meal;
