@@ -16,7 +16,7 @@ CREATE TABLE users
     calories_per_day INTEGER             DEFAULT 2000  NOT NULL
 );
 CREATE
-    UNIQUE INDEX users_unique_email_idx ON users (email);
+UNIQUE INDEX users_unique_email_idx ON users (email);
 
 CREATE TABLE user_roles
 (
@@ -30,11 +30,9 @@ CREATE TABLE meals
 (
     id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
     user_id     INTEGER   NOT NULL,
-    datetime    TIMESTAMP NOT NULL,
+    date_time   TIMESTAMP NOT NULL,
     description VARCHAR   NOT NULL,
     calories    INTEGER,
-    CONSTRAINT meals_idx UNIQUE (user_id, datetime),
+    CONSTRAINT meals_idx UNIQUE (user_id, date_time),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-CREATE
-    UNIQUE INDEX meals_unique_datetime_idx ON meals (user_id, datetime);

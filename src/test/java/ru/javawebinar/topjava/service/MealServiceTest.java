@@ -13,7 +13,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
@@ -22,7 +21,7 @@ import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
-        "classpath:spring/spring-app.xml",
+        "classpath:spring/spring-app-jdbc.xml",
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringRunner.class)
@@ -41,7 +40,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(MEAL2_ID, USER_ID);
-        assertMatch(meal, meal2);
+        assertMatch(meal, userMeal2);
     }
 
     @Test
@@ -62,20 +61,20 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenInclusive() {
-        List<Meal> all = service.getBetweenInclusive(LocalDate.parse("2020-01-31"), LocalDate.parse("2020-01-31"), USER_ID);
-        assertMatch(all, meal5);
+        List<Meal> all = service.getBetweenInclusive(LocalDate.parse("2020-01-30"), LocalDate.parse("2020-01-30"), USER_ID);
+        assertMatch(all, userMeal4, userMeal2, userMeal1);
     }
 
     @Test
-    public void getAllForUSER_ID() {
+    public void getAllForUser() {
         List<Meal> all = service.getAll(USER_ID);
-        assertMatch(all, meal5, meal4, meal2, meal1);
+        assertMatch(all, userMeal5, userMeal4, userMeal2, userMeal1);
     }
 
     @Test
-    public void getAllForADMIN_ID() {
+    public void getAllForAdmin() {
         List<Meal> all = service.getAll(ADMIN_ID);
-        assertMatch(all, meal3);
+        assertMatch(all, adminMeal3);
     }
 
     @Test
@@ -105,6 +104,6 @@ public class MealServiceTest {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new Meal(LocalDateTime.parse("2020-01-30T10:00:00"), "Завтрак_duplicateDateTime", 500), USER_ID));
+                service.create(new Meal(userMeal1.getDateTime(), "Завтрак_duplicateDateTime", 500), USER_ID));
     }
 }

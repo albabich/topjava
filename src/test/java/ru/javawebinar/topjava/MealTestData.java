@@ -15,18 +15,18 @@ public class MealTestData {
     public static final int MEAL4_ID = START_SEQ + 5;
     public static final int MEAL5_ID = START_SEQ + 6;
 
-    public static final Meal meal1 = new Meal(MEAL1_ID, LocalDateTime.parse("2020-01-30T10:00:00"), "Завтрак", 500);
-    public static final Meal meal2 = new Meal(MEAL2_ID, LocalDateTime.parse("2020-01-30T14:00:00"), "Обед", 1000);
-    public static final Meal meal3 = new Meal(MEAL3_ID, LocalDateTime.parse("2020-01-30T13:00:00"), "Обед", 1200);
-    public static final Meal meal4 = new Meal(MEAL4_ID, LocalDateTime.parse("2020-01-30T20:00:00"), "Ужин", 500);
-    public static final Meal meal5 = new Meal(MEAL5_ID, LocalDateTime.parse("2020-01-31T10:00:00"), "Завтрак", 550);
+    public static final Meal userMeal1 = new Meal(MEAL1_ID, LocalDateTime.parse("2020-01-30T10:00:00"), "Завтрак", 510);
+    public static final Meal userMeal2 = new Meal(MEAL2_ID, LocalDateTime.parse("2020-01-30T14:00:00"), "Обед", 1000);
+    public static final Meal adminMeal3 = new Meal(MEAL3_ID, LocalDateTime.parse("2020-01-30T13:00:00"), "Обед", 1200);
+    public static final Meal userMeal4 = new Meal(MEAL4_ID, LocalDateTime.parse("2020-01-30T20:00:00"), "Ужин", 500);
+    public static final Meal userMeal5 = new Meal(MEAL5_ID, LocalDateTime.parse("2020-01-31T10:00:00"), "Завтрак", 550);
 
     public static Meal getNew() {
         return new Meal(null, LocalDateTime.now(), "Новая еда", 700);
     }
 
     public static Meal getUpdated() {
-        Meal updated = new Meal(meal2);
+        Meal updated = new Meal(userMeal2);
         updated.setDateTime(LocalDateTime.parse("2020-01-30T14:30:00"));
         updated.setCalories(1100);
         updated.setDescription("Обед_updated");
