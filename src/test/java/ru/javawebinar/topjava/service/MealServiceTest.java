@@ -18,6 +18,7 @@ import java.util.List;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
@@ -45,6 +46,11 @@ public class MealServiceTest {
     }
 
     @Test
+    public void getNotFound() {
+        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
+    }
+
+    @Test
     public void getNoBelongingMeal() {
         assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, ADMIN_ID));
     }
@@ -56,14 +62,25 @@ public class MealServiceTest {
     }
 
     @Test
+    public void deletedNotFound() {
+        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
+    }
+
+    @Test
     public void deleteNoBelongingMeal() {
         assertThrows(NotFoundException.class, () -> service.delete(MEAL2_ID, ADMIN_ID));
     }
 
     @Test
     public void getBetweenInclusive() {
-        List<Meal> all = service.getBetweenInclusive(LocalDate.of(2020, 01, 30), LocalDate.of(2020, 01, 30), USER_ID);
+        List<Meal> all = service.getBetweenInclusive(LocalDate.of(2020, 1, 30), LocalDate.of(2020, 1, 30), USER_ID);
         assertMatch(all, userMeal4, userMeal2, userMeal1);
+    }
+
+    @Test
+    public void getBetweenInclusiveWithoutBoundaries() {
+        List<Meal> all = service.getBetweenInclusive(null, null, USER_ID);
+        assertMatch(all, userMeal5, userMeal4, userMeal2, userMeal1);
     }
 
     @Test
@@ -82,7 +99,7 @@ public class MealServiceTest {
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        assertMatch(service.get(MEAL2_ID, USER_ID), updated);
+        assertMatch(service.get(MEAL2_ID, USER_ID), getUpdated());
     }
 
     @Test
@@ -97,7 +114,6 @@ public class MealServiceTest {
         Integer newId = created.getId();
         Meal newMeal = getNew();
         newMeal.setId(newId);
-        newMeal.setDateTime(created.getDateTime());
         assertMatch(created, newMeal);
         assertMatch(service.get(newId, USER_ID), newMeal);
     }
