@@ -28,7 +28,7 @@ public class MealTestData {
 
     public static Meal getUpdated() {
         Meal updated = new Meal(userMeal2);
-        updated.setDateTime(LocalDateTime.parse("2020-01-30T14:30:00"));
+        updated.setDateTime(LocalDateTime.of(2020,1,30,14,30,0));
         updated.setCalories(1100);
         updated.setDescription("Обед_updated");
         return updated;
