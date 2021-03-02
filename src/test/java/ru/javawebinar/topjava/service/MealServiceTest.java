@@ -1,7 +1,13 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,8 +17,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -26,6 +36,37 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+    static List<String> testDurations = new ArrayList<>();
+    @ClassRule
+    public static TestWatcher classWatcher = new TestWatcher() {
+
+        @Override
+        protected void finished(Description description) {
+            for (String testDuration : testDurations) {
+                log.info(testDuration);
+            }
+        }
+    };
+
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        Instant start;
+        Instant finish;
+
+        @Override
+        protected void starting(Description description) {
+            start = Instant.now();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            finish = Instant.now();
+            String duration = "Test '" + description.getMethodName() + "' duration - " + Duration.between(start, finish).toMillis() + "ms";
+            testDurations.add(duration);
+            log.info(duration);
+        }
+    };
 
     @Autowired
     private MealService service;
