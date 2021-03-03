@@ -14,18 +14,15 @@ import java.time.LocalTime;
         @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.user.id =:user_id AND m.id =:id"),
         @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m  WHERE m.user.id =:user_id AND m.id =:id"),
         @NamedQuery(name = Meal.ALL, query = "SELECT m FROM Meal m  WHERE m.user.id =:user_id ORDER BY m.dateTime DESC"),
-        @NamedQuery(name = Meal.UPDATE, query = "UPDATE  Meal SET dateTime =:date_time, description =:description," +
-                " calories =:calories WHERE user.id =:user_id AND id =:id"),
         @NamedQuery(name = Meal.BETWEEN, query = "SELECT m FROM Meal m  WHERE m.user.id =:user_id AND m.dateTime >=:start_date_time" +
                 " AND m.dateTime <:end_date_time ORDER BY m.dateTime DESC"),
 })
 @Entity
-@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = "date_time", name = "meals_unique_user_datetime_idx")})
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
     public static final String GET = "Meal.get";
     public static final String ALL = "Meal.all";
     public static final String BETWEEN = "Meal.between";
-    public static final String UPDATE = "Meal.update";
     public static final String DELETE = "Meal.delete";
 
     @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()")
@@ -43,7 +40,7 @@ public class Meal extends AbstractBaseEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Meal() {
