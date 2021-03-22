@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -11,7 +10,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,7 +24,13 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 public class JspMealController extends AbstractMealController {
 
     public JspMealController(MealService service) {
-        super(service, LoggerFactory.getLogger(JspMealController.class));
+        super(service, JspMealController.class);
+    }
+
+    @GetMapping()
+    public String getAll(Model model) {
+        model.addAttribute("meals", getAll());
+        return "meals";
     }
 
     @GetMapping("/delete")
@@ -36,8 +40,8 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping("/update")
-    public String update(HttpServletRequest request) {
-        request.setAttribute("meal", get(getId(request)));
+    public String update(Model model, HttpServletRequest request) {
+        model.addAttribute("meal", get(getId(request)));
         return "mealForm";
     }
 
@@ -48,9 +52,8 @@ public class JspMealController extends AbstractMealController {
         return "mealForm";
     }
 
-    @PostMapping("/save")
-    public String save(HttpServletRequest request) throws UnsupportedEncodingException {
-        request.setCharacterEncoding("UTF-8");
+    @PostMapping()
+    public String save(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -63,7 +66,7 @@ public class JspMealController extends AbstractMealController {
         return "redirect:/meals";
     }
 
-    @GetMapping
+    @GetMapping("/filter")
     public String filter(HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
