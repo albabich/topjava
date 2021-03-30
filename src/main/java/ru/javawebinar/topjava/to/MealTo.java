@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.to;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +18,11 @@ public class MealTo {
     private final boolean excess;
 
     @JsonCreator
-    public MealTo(@JsonProperty("id") Integer id, @JsonProperty("dateTime") LocalDateTime dateTime, @JsonProperty("description") String description, @JsonProperty("calories") int calories, @JsonProperty("excess") boolean excess) {
+    public MealTo(@JsonProperty("id") Integer id,
+                  @JsonProperty("dateTime") LocalDateTime dateTime,
+                  @JsonProperty("description") String description,
+                  @JsonProperty("calories") int calories,
+                  @JsonProperty("excess") boolean excess) {
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;
@@ -54,5 +59,23 @@ public class MealTo {
                 ", calories=" + calories +
                 ", excess=" + excess +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !getClass().equals(Hibernate.getClass(obj))) {
+            return false;
+        }
+        MealTo that = (MealTo) obj;
+        return id != null && id.equals(that.id);
+
     }
 }
