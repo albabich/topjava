@@ -1,8 +1,8 @@
-const userAjaxUrl = "admin/users/";
+const mealAjaxUrl = "profile/meals/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: userAjaxUrl
+    ajaxUrl: mealAjaxUrl
 };
 
 // $(document).ready(function () {
@@ -13,20 +13,18 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "name"
+                    "data": "dateTime",
+                    // "defaultContent":""
                 },
                 {
-                    "data": "email"
+                    "data": "description",
+                    // "defaultContent":""
                 },
                 {
-                    "data": "roles"
+                    "data": "calories",
+                    // "defaultContent":""
                 },
-                {
-                    "data": "enabled"
-                },
-                {
-                    "data": "registered"
-                },
+
                 {
                     "defaultContent": "Edit",
                     "orderable": false
@@ -39,21 +37,25 @@ $(function () {
             "order": [
                 [
                     0,
-                    "asc"
+                    "desc"
                 ]
             ]
         })
     );
 });
 
-function check(event) {
-    const row = $(event.currentTarget).closest('tr')
-    const enabled = $(event.currentTarget).prop('checked');
+function filter() {
     $.ajax({
-        method: "POST",
-        url: ctx.ajaxUrl + row.attr('id'),
-        data: {enabled: enabled}
-    }).done(function () {
-        row.attr("data-userenabled", enabled);
+        type: "GET",
+        url: mealAjaxUrl + "filter",
+        data: $('#filter').serialize(),
+        success: function (data) {
+            ctx.datatableApi.clear().rows.add(data).draw();
+        }
     });
+}
+
+function filterOff() {
+    $("#filter").find(":input").val("");
+    filter();
 }
